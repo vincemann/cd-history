@@ -1,0 +1,80 @@
+# CD HISTORY 					by vincemann @ github.com
+
+# extends functionality of cd:
+# saves last visited directories systemwide and let user cd into recently visited dirs
+# aliases cd with bashfunction providing additional features
+
+# USAGE
+# cd -- 	// display recent history with indexes
+# cd -3 	// cd into dir from histoty at index 3
+# cd --- 	// display whole history
+
+#____________________________________________________________________________________________
+cd_func ()
+ {
+    local x2 newDir adir index dir_hist
+    local -i cnt
+
+
+    dir_hist="/tmp/dir-history"
+    # create history stack if not already there
+    if [[ ! -e "$dir_hist" ]]; then
+        touch "$dir_hist"
+    fi
+
+    # list last dirs
+    if [[ $1 ==  "--" ]]; then
+	cat -n "$dir_hist" | head -11
+     return 0
+    fi
+
+    # list all visited dirs
+    if [[ $1 ==  "---" ]]; then
+	cat -n "$dir_hist"
+     return 0
+    fi
+	
+	
+     newDir=$1
+     [[ -z $1 ]] && newDir=$HOME
+
+     # extract dir by index and update dir, that gets cd into -> newDir
+     if [[ ${newDir:0:1} == '-' ]]; then
+       index=${newDir:1}
+	printf "selected index: %s\n" "$index"
+     [[ -z $index ]] && index=1
+	adir=`sed "${index}q;d" "$dir_hist"`
+	printf "selected dir from history file: %s\n" "$adir"
+       [[ -z $adir ]] && return 1
+       newDir=$adir
+     fi
+
+     # convert to absolute path
+     newDir=`readlink -f "$newDir"`
+     command cd "$newDir"
+     # if cd failed, return 1 and dont save invalid dir on stack
+     [[ $? -ne 0 ]] && return 1
+     
+     # save dir on stack
+     echo "$newDir" | cat - "$dir_hist" > /tmp/27382hf92 && mv /tmp/27382hf92 "$dir_hist"
+
+     
+     # remove duplicate dirs
+     tmp="/tmp/dir-history-temp"
+     awk '!visited[$0]++' "$dir_hist" > "$tmp"
+     cat "$tmp" > "$dir_hist"
+     rm "$tmp"
+
+     return 0
+   }
+
+   alias cd=cd_func
+
+   if [[ $BASH_VERSION > "2.05a" ]]; then
+     # ctrl+w shows the menu
+     bind -x "\"\C-w\":cd_func -- ;"
+   fi
+
+
+#____________________________________________________________________________________________
+
