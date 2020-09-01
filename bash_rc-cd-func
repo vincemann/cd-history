@@ -41,10 +41,8 @@ cd_func ()
      # extract dir by index and update dir, that gets cd into -> newDir
      if [[ ${newDir:0:1} == '-' ]]; then
        index=${newDir:1}
-	printf "selected index: %s\n" "$index"
      [[ -z $index ]] && index=1
 	adir=`sed "${index}q;d" "$dir_hist"`
-	printf "selected dir from history file: %s\n" "$adir"
        [[ -z $adir ]] && return 1
        newDir=$adir
      fi
