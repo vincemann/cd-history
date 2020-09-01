@@ -5,9 +5,12 @@ works by aliasing cd with bashfunction, that implements those features
 
 ## features  
   
-* cd -- 	// display recent history with indexes  
-* cd -3 	// cd into dir from histoty at index 3   
-* cd --- 	// display whole history  
+display recent history with indexes  
+* cd -- 	
+cd into dir from histoty at index 3   
+* cd -3 	
+display whole history  
+* cd --- 	
   
 ## install  
 run install.sh   
