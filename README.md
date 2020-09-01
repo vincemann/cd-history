@@ -2,14 +2,15 @@
   
 extends cd by systemwide history stack + let user cd into recently visited dirs  
 works by aliasing cd with bashfunction, that implements those features  
-
-## features  
   
-* display recent history with indexes with:  
+## features  
+* display recent history with indexes:  
 * cd -- 	
-* cd into dir from histoty at index 3 with:  
-* cd -3 	
-* display whole history with:  
+* display recent history results containing word foo:  
+* cd -- foo	 
+* cd into dir from histoty at index 3:  
+* cd - 3 	
+* display whole history:  
 * cd --- 	 
   
 ## install  
