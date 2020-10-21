@@ -73,6 +73,7 @@ cd_func ()
      cat "$tmp" > "$dir_hist"
      rm "$tmp"
 
+     chmod a+rw /home/vince/.dir-history
      return 0
    }
 
