@@ -18,8 +18,12 @@ cd_func ()
     local x2 newDir adir index dir_hist
     local -i cnt
 
+    dir_hist=`echo $DIR_HISTORY`
+    if [ -z "$dir_hist" ]
+    then
+      dir_hist="~/.dir-history"
+    fi
 
-    dir_hist="/tmp/dir-history"
     # create history stack if not already there
     if [[ ! -e "$dir_hist" ]]; then
         touch "$dir_hist"
@@ -64,14 +68,16 @@ cd_func ()
      [[ $? -ne 0 ]] && return 1
      
      # save dir on stack
-     echo "$newDir" | cat - "$dir_hist" > /tmp/27382hf92 && mv /tmp/27382hf92 "$dir_hist"
-
+     tmp=`tempfile`
+     echo "$newDir" | cat - "$dir_hist" > "$tmp"
+     cat "$tmp" > "$dir_hist"
+     rm -f "$tmp"
      
      # remove duplicate dirs
-     tmp="/tmp/dir-history-temp"
-     awk '!visited[$0]++' "$dir_hist" > "$tmp"
-     cat "$tmp" > "$dir_hist"
-     rm "$tmp"
+     tmp2=`tempfile`
+     awk '!visited[$0]++' "$dir_hist" > "$tmp2"
+     cat "$tmp2" > "$dir_hist"
+     rm -f "$tmp2"
 
      chmod a+rw "$dir_hist"
      return 0
