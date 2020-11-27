@@ -1,7 +1,9 @@
 # cd-history  
   
-extends cd by systemwide history stack + let user cd into recently visited dirs  
+extends cd by user-wide permanent history stack + let user cd into recently visited dirs  
 works by aliasing cd with bashfunction, that implements those features  
+to make the history syste-mwide append to your /etc/bash.bashrc:  
+DIR_HISTORY="/absolute/path/to/my/dir/.dir-history"  
   
 ## features  
 * display recent history with indexes:  
