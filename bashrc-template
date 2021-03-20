@@ -1,0 +1,96 @@
+
+
+# CD HISTORY START	by vincemann @ https://github.com/vincemann/cd-history ____________________________________________________________________________________________
+
+# extends functionality of cd:
+# saves last visited directories systemwide and let user cd into recently visited dirs
+# aliases cd with bashfunction providing additional features
+
+# USAGE
+# cd -- 		display recent history with indexes
+# cd -- foo		display recent history results containing word foo
+# cd - 3 		cd into dir from histoty at index 3
+# cd --- 		display whole history
+export DIR_HISTORY="§HOME/.dir-history"
+export DIR_HIST_AMOUNT_LOGIN=4
+
+cd_func ()
+{
+	local x2 newDir adir index dir_hist
+	local -i cnt
+	
+	# GET HISTORY FILE
+	dir_hist=`echo $DIR_HISTORY`
+	if [ -z "$dir_hist" ]
+	then
+		dir_hist="~/.dir-history"
+	fi
+	# create history stack if not already there
+	if [[ ! -e "$dir_hist" ]]; then
+		touch "$dir_hist"
+	fi
+	
+	# LIST LAST DIRS
+	if [[ $1 ==  "--" ]]; then
+	# if arg after -- is present, it is interpreted as must-match-word in path
+	matchWord="$2"
+	if [ -n "$matchWord" ];
+	then
+		cat -n "$dir_hist" | grep -i "$matchWord" | head -11
+	else
+		cat -n "$dir_hist" | head -11
+	fi
+	 	return 0
+	fi
+	
+	# LIST ALL DIRS
+	if [[ $1 ==  "---" ]]; then
+		cat -n "$dir_hist" | more
+	 	return 0
+	fi
+	
+	
+	newDir=$1
+	[[ -z $1 ]] && newDir=$HOME
+	
+	# extract dir by index and update dir, that gets cd into -> newDir
+	if [[ ${newDir:0:1} == '-' ]]; then
+		index=$2
+		[[ -z $index ]] && index=1
+		adir=`sed "${index}q;d" "$dir_hist"`
+	 	[[ -z $adir ]] && return 1
+	  	newDir=$adir
+	 fi
+	 
+	 # CONVERT TO ABS PATH
+	 newDir=`readlink -f "$newDir"`
+	 command cd "$newDir"
+	 # if cd failed, return 1 and dont save invalid dir on stack
+	 [[ $? -ne 0 ]] && return 1
+	 
+	 # save dir on stack
+	 tmp=`mktemp`
+	 echo "$newDir" | cat - "$dir_hist" > "$tmp"
+	 cat "$tmp" > "$dir_hist"
+	 command rm -f "$tmp"
+	 
+	 # remove duplicate dirs
+	 tmp2=`mktemp`
+	 awk '!visited[$0]++' "$dir_hist" > "$tmp2"
+	 cat "$tmp2" > "$dir_hist"
+	 command rm -f "$tmp2"
+	 
+	 chmod a+rw "$dir_hist"
+	 return 0
+}
+
+alias cd=cd_func
+alias c='cd -'
+alias cc='cd --'
+
+# show last visited dirs and move to last dir on start of bash
+cd -- | head -n $DIR_HIST_AMOUNT_LOGIN
+cd - 1
+
+# CD HISTORY END ____________________________________________________________________________________________
+
