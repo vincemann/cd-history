@@ -88,9 +88,12 @@ alias cd=cd_func
 alias c='cd -'
 alias cc='cd --'
 
+# done to work smoothly together with ez-bash 
+if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
 # show last visited dirs and move to last dir on start of bash
-cd -- | head -n $DIR_HIST_AMOUNT_LOGIN
-cd - 1
+	cd -- | head -n $DIR_HIST_AMOUNT_LOGIN
+	cd - 1
+fi
 
 # CD HISTORY END ____________________________________________________________________________________________
 
