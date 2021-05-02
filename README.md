@@ -1,6 +1,6 @@
 # cd-history  
   
-extends cd by user-wide permanent history stack + let user cd into recently visited dirs  
+extends cd by system-wide permanent dir-history stack + let user cd into recently visited dirs  
   
 works by aliasing cd with bashfunction (in /etc/bash.bashrc), that implements those features  
 to make the history system-wide
