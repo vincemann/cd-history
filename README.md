@@ -1,10 +1,9 @@
 # cd-history  
   
-extends cd by user-wide permanent history stack + let user cd into recently visited dirs  
+extends cd by system-wide permanent dir-history stack + let user cd into recently visited dirs  
   
-works by aliasing cd with bashfunction, that implements those features  
-to make the history system-wide: append to your /etc/bash.bashrc:  
-DIR_HISTORY="/absolute/path/to/my/dir/.dir-history"  
+works by aliasing cd with bashfunction (in /etc/bash.bashrc), that implements those features  
+to make the history system-wide
   
 ## features  
 * display recent history with indexes:  
@@ -17,6 +16,4 @@ DIR_HISTORY="/absolute/path/to/my/dir/.dir-history"
 * cd --- 	 
   
 ## install  
-run install.sh   
-this will append the alias config + bash function to your system wide /etc/bash.bashrc  
-changes will take place after restarting of terminal  
+./install.sh   
