@@ -1,44 +1,67 @@
 #!/bin/bash
 
+GUI=$1
+LOCAL=$2
+
+print_usage()
+{
+	echo "usage ./install gui|terminal local|system"
+	exit 1
+}
+
+if [[ $GUI = "gui" ]]; then
+	echo "installing gui version"
+elif [[ $GUI = "terminal" ]]; then
+	echo "installing terminal version"
+else
+	print_usage
+fi
+
+
+if [[ $LOCAL = "local" ]];then
+	echo "installing locally"
+elif [[ $LOCAL = "system" ]];then
+	echo "installing system wide"
+else
+	print_usage
+fi
+
+load_libs
+
+bashrc="/etc/bash.bashrc"
+if [[[ "$LOCAL" = "local" ]]; then
+	bashrc="$HOME/.bashrc"
+else
+
 start_pattern="# CD HISTORY START"
 end_pattern="# CD HISTORY END"
-start_found=$(sudo cat /etc/bash.bashrc | grep --count "$start_pattern")
-end_found=$(sudo cat /etc/bash.bashrc | grep --count "$end_pattern")
-bashrc="/etc/bash.bashrc"
+start_found=$(sudo cat "$bashrc" | grep --count "$start_pattern")
+end_found=$(sudo cat "$bashrc" | grep --count "$end_pattern")
 
 # backup
-sudo cp "$bashrc" "$HOME/.cd-history-system-bashrc.bak"
+mkdir -p "$HOME/.ezbash-suite-backups"
+sudo cp "$bashrc" "$HOME/.ezbash-suite-backups/.cd-history-bashrc.bak"
 
 # replace vars
 template_file=$(mktemp)
 cat bashrc-template > "$template_file"
 sed -i -e "s@§HOME@$HOME@g" "$template_file"
 
-replace_or_add_paragraph()
+
+load_libs()
 {
-	file="$1"
-	start_pattern="$2"
-	end_pattern="$3"
-	data_file="$4"
-
-	start_found=$(sudo cat "$file" | grep --count "$start_pattern")
-	end_found=$(sudo cat "$file" | grep --count "$end_pattern")
-
-	if [[ "$start_found" -eq 1 && "$end_found" -eq 1 ]];then
-		echo "found prev installation, updating..."
-		# remove old version
-		sudo sed -i "/$start_pattern/,/$end_pattern/d" "$file"
-		# install new
-		cat "$data_file" | sudo tee -a "$file" 1>/dev/null
-	elif [[ "$start_found" -eq 0 && "$end_found" -eq 0 ]];then
-		cat "$data_file" | sudo tee -a "$file" 1>/dev/null
-	else
-		echo "invalid amount of installations found: start: $start_found, end: $end_found"
-		exit 1
-	fi
+	echo "loading dependencies"
+	git pull https://github.com/vincemann/ez-bash.git
+	mv ./ez-bash/lib .
+	rm -rf ./ez-bash
 }
 
-replace_or_add_paragraph "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
+sudo bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
+sudo bash ./lib/replace_or_add_line.sh "$bashrc" "CD_HIST_GUI=" "export CD_HIST_GUI=$gui"
+
+echo "creating symlink in path (/usr/local/bin)"
+chmod a+x "./show-last-dirs.py"
+ln -s "/usr/local/bin/show-last-dirs" "$(pwd)/show-last-dirs.py"
 
 echo "installed"
 echo "restart terminal for changes to take effect"

@@ -7,19 +7,17 @@
 # aliases cd with bashfunction providing additional features
 
 # USAGE
-# cd -- 		display recent history with indexes
-# cd -- foo		display recent history results containing word foo
-# cd - 3 		cd into dir from histoty at index 3
-# cd --- 		display whole history
+# cd -- 		display recent history and goto selected
+# cd -- foo		display recent history results containing word foo and goto selected
+# cd -- show 10 only display recent history in terminal
+# cd -			goto last directory without saving it again
 export DIR_HISTORY="§HOME/.dir-history"
 export DIR_HIST_AMOUNT_LOGIN=4
+export CD_HIST_GUI=
 
-cd_func ()
+
+get_dir_history()
 {
-	local x2 newDir adir index dir_hist
-	local -i cnt
-	
-	# GET HISTORY FILE
 	dir_hist=`echo $DIR_HISTORY`
 	if [ -z "$dir_hist" ]
 	then
@@ -29,6 +27,38 @@ cd_func ()
 	if [[ ! -e "$dir_hist" ]]; then
 		touch "$dir_hist"
 	fi
+	echo "$dir_hist"
+}
+
+goto_last_dir()
+{
+	local dir_hist
+	dir_hist=$(get_dir_history)
+	if [ -s dir_hist ]; then
+        # The file is not-empty.
+        last_dir=$(cat "$dir_hist" | head -n 1)
+        command cd "$last_dir"
+	fi
+}
+
+cd_func ()
+{
+	local x2 selected_dir adir index dir_hist
+	local -i cnt
+	
+	dir_hist=$(get_dir_history)
+
+	# only show dirs in terminal second arg must be amount
+	if [[ -n "$1"]]; then
+		if [[ "$1" ==  "show" ]];
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$2")
+			return 0
+		fi
+		if [[ "$1" ==  "-" ]];
+			goto_last_dir
+			return 0
+		fi
+	fi
 	
 	# LIST LAST DIRS
 	if [[ $1 ==  "--" ]]; then
@@ -36,41 +66,43 @@ cd_func ()
 	matchWord="$2"
 	if [ -n "$matchWord" ];
 	then
-		cat -n "$dir_hist" | grep -i "$matchWord" | head -11
+		selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" 11 0)
+		# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
 	else
-		cat -n "$dir_hist" | head -11
+		# cat -n "$dir_hist" | head -11
+		selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" 11 0)
 	fi
 	 	return 0
 	fi
 	
 	# LIST ALL DIRS
-	if [[ $1 ==  "---" ]]; then
-		cat -n "$dir_hist" | more
-	 	return 0
-	fi
+	# if [[ $1 ==  "---" ]]; then
+	# 	cat -n "$dir_hist" | more
+	#  	return 0
+	# fi
 	
 	
-	newDir=$1
-	[[ -z $1 ]] && newDir=$HOME
+	# newDir=$1
+	# [[ -z $1 ]] && newDir=$HOME
 	
-	# extract dir by index and update dir, that gets cd into -> newDir
-	if [[ ${newDir:0:1} == '-' ]]; then
-		index=$2
-		[[ -z $index ]] && index=1
-		adir=`sed "${index}q;d" "$dir_hist"`
-	 	[[ -z $adir ]] && return 1
-	  	newDir=$adir
-	 fi
+	# # extract dir by index and update dir, that gets cd into -> newDir
+	# if [[ ${newDir:0:1} == '-' ]]; then
+	# 	index=$2
+	# 	[[ -z $index ]] && index=1
+	# 	adir=`sed "${index}q;d" "$dir_hist"`
+	#  	[[ -z $adir ]] && return 1
+	#   	newDir=$adir
+	#  fi
 	 
 	 # CONVERT TO ABS PATH
-	 newDir=`readlink -f "$newDir"`
-	 command cd "$newDir"
+	 # newDir=`readlink -f "$newDir"`
+	 command cd "$selected_dir"
 	 # if cd failed, return 1 and dont save invalid dir on stack
 	 [[ $? -ne 0 ]] && return 1
 	 
 	 # save dir on stack
 	 tmp=`mktemp`
-	 echo "$newDir" | cat - "$dir_hist" > "$tmp"
+	 echo "$selected_dir" | cat - "$dir_hist" > "$tmp"
 	 cat "$tmp" > "$dir_hist"
 	 command rm -f "$tmp"
 	 
@@ -85,14 +117,14 @@ cd_func ()
 }
 
 alias cd=cd_func
-alias c='cd -'
-alias cc='cd --'
+alias cc='cd show'
+alias c='cd --'
 
 # done to work smoothly together with ez-bash 
 if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
-# show last visited dirs and move to last dir on start of bash
-	cd -- | head -n $DIR_HIST_AMOUNT_LOGIN
-	cd - 1
+	# show last visited dirs and move to last dir on start of bash
+	cd show "$DIR_HIST_AMOUNT_LOGIN"
+	goto_last_dir
 fi
 
 # CD HISTORY END ____________________________________________________________________________________________
