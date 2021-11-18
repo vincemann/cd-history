@@ -29,7 +29,7 @@ fi
 load_libs()
 {
 	echo "loading dependencies"
-	git pull https://github.com/vincemann/ez-bash.git
+	git clone https://github.com/vincemann/ez-bash.git
 	mv ./ez-bash/lib .
 	rm -rf ./ez-bash
 }
