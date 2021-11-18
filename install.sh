@@ -26,12 +26,20 @@ else
 	print_usage
 fi
 
+load_libs()
+{
+	echo "loading dependencies"
+	git pull https://github.com/vincemann/ez-bash.git
+	mv ./ez-bash/lib .
+	rm -rf ./ez-bash
+}
+
 load_libs
 
 bashrc="/etc/bash.bashrc"
 if [[[ "$LOCAL" = "local" ]]; then
 	bashrc="$HOME/.bashrc"
-else
+fi
 
 start_pattern="# CD HISTORY START"
 end_pattern="# CD HISTORY END"
@@ -47,14 +55,6 @@ template_file=$(mktemp)
 cat bashrc-template > "$template_file"
 sed -i -e "s@§HOME@$HOME@g" "$template_file"
 
-
-load_libs()
-{
-	echo "loading dependencies"
-	git pull https://github.com/vincemann/ez-bash.git
-	mv ./ez-bash/lib .
-	rm -rf ./ez-bash
-}
 
 sudo bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
 sudo bash ./lib/replace_or_add_line.sh "$bashrc" "CD_HIST_GUI=" "export CD_HIST_GUI=$gui"
