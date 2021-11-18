@@ -19,8 +19,7 @@ export CD_HIST_GUI=
 get_dir_history()
 {
 	dir_hist=`echo $DIR_HISTORY`
-	if [ -z "$dir_hist" ]
-	then
+	if [ -z "$dir_hist" ]; then
 		dir_hist="~/.dir-history"
 	fi
 	# create history stack if not already there
