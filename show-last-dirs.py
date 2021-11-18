@@ -43,9 +43,9 @@ last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
 
 
 if gui == "gui":
-    selected_dir = selection.show_gui_selection(last_dirs)
+    selected_dir = ezlib.show_gui_selection(last_dirs)
 else:
-    selected_dir = selection.show_terminal_selection(last_dirs)
+    selected_dir = ezlib.show_terminal_selection(last_dirs)
 
 if clip == 1:
 	ezlib.put_to_clipboard(selected_dir)
