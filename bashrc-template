@@ -49,19 +49,19 @@ cd_func ()
 	dir_hist=$(get_dir_history)
 
 	# only show dirs in terminal second arg must be amount
-	if [[ -n "$1"]]; then
-		if [[ "$1" ==  "show" ]];
+	if [[ -n "$1" ]]; then
+		if [[ "$1" == "show" ]];
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$2")
 			return 0
 		fi
-		if [[ "$1" ==  "-" ]];
+		if [[ "$1" == "-" ]];
 			goto_last_dir
 			return 0
 		fi
 	fi
 	
 	# LIST LAST DIRS
-	if [[ $1 ==  "--" ]]; then
+	if [[ $1 == "--" ]]; then
 	# if arg after -- is present, it is interpreted as must-match-word in path
 	matchWord="$2"
 	if [ -n "$matchWord" ];
