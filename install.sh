@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 GUI=$1
 LOCAL=$2
 
@@ -25,6 +26,10 @@ elif [[ $LOCAL = "system" ]];then
 else
 	print_usage
 fi
+
+
+sudo apt install -y python3-tk
+
 
 load_libs()
 {
