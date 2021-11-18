@@ -15,6 +15,7 @@ if len(sys.argv) > 1:
         ezlib.eprint("gui was: %s" % gui)
         ezlib.eprint("usage: python3 show-last-dirs.py gui|terminal [matchword [last-dirs-amount=num default 10 [ clip=[0|1] default 0]]]")
         exit(1)
+    ezlib.eprint("gui is: %s" % gui)
 
 
 
@@ -29,7 +30,8 @@ if len(sys.argv) > 3:
 
 if len(sys.argv) > 4:
     clip = int(sys.argv[4])
-    if not (clip == "0" or clip == "1"):
+    if not (clip == 0 or clip == 1):
+        ezlib.eprint("clip was %d" % clip)
         ezlib.eprint("usage: python3 show-last-dirs.py gui|terminal [matchword [last-dirs-amount=num default 10 [ clip=[0|1] default 0]]]")
         exit(1)
     ezlib.eprint("clip is %d" % clip)
