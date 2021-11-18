@@ -61,7 +61,7 @@ sudo bash ./lib/replace_or_add_line.sh "$bashrc" "CD_HIST_GUI=" "export CD_HIST_
 
 echo "creating symlink in path (/usr/local/bin)"
 chmod a+x "./show-last-dirs.py"
-ln -s "/usr/local/bin/show-last-dirs" "$(pwd)/show-last-dirs.py"
+ln -s "$(pwd)/show-last-dirs.py" "/usr/local/bin/show-last-dirs"
 
 echo "installed"
 echo "restart terminal for changes to take effect"
