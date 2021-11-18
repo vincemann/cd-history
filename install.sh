@@ -37,7 +37,7 @@ load_libs()
 load_libs
 
 bashrc="/etc/bash.bashrc"
-if [[[ "$LOCAL" = "local" ]]; then
+if [[ "$LOCAL" = "local" ]]; then
 	bashrc="$HOME/.bashrc"
 fi
 
@@ -57,7 +57,7 @@ sed -i -e "s@§HOME@$HOME@g" "$template_file"
 
 
 sudo bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
-sudo bash ./lib/replace_or_add_line.sh /etc/bash.bashrc "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI"
+sudo bash ./lib/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI"
 
 
 echo "creating symlink in path (/usr/local/bin)"
