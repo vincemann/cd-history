@@ -5,7 +5,7 @@ LOCAL=$2
 
 print_usage()
 {
-	echo "usage ./install gui|terminal local|system"
+	echo "(cd-history)usage ./install gui|terminal local|system"
 	exit 1
 }
 
