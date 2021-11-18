@@ -39,7 +39,7 @@ if dir_history_file == None or dir_history_file == "":
 	ezlib.eprint("cannot find dir dir history-file, set DIR_HISTORY env var")
 	exit(1)
 
-last_dirs = ezlib.find_recent_dirs(last_dirs_amount,matchword)
+last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
 
 
 if gui == "gui":
