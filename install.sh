@@ -57,7 +57,7 @@ sed -i -e "s@§HOME@$HOME@g" "$template_file"
 
 
 sudo bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
-sudo bash ./lib/replace_or_add_line.sh "$bashrc" "CD_HIST_GUI=" "export CD_HIST_GUI=$gui"
+sudo bash ./lib/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$gui"
 
 echo "creating symlink in path (/usr/local/bin)"
 chmod a+x "./show-last-dirs.py"

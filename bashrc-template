@@ -50,7 +50,8 @@ cd_func ()
 	# only show dirs in terminal second arg must be amount
 	if [[ -n "$1" ]]; then
 		if [[ "$1" == "show" ]]; then
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$2")
+			amount=$2
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$amount")
 			return 0
 		fi
 		if [[ "$1" == "-" ]]; then
