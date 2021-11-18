@@ -49,11 +49,11 @@ cd_func ()
 
 	# only show dirs in terminal second arg must be amount
 	if [[ -n "$1" ]]; then
-		if [[ "$1" == "show" ]];
+		if [[ "$1" == "show" ]]; then
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$2")
 			return 0
 		fi
-		if [[ "$1" == "-" ]];
+		if [[ "$1" == "-" ]]; then
 			goto_last_dir
 			return 0
 		fi
@@ -61,16 +61,15 @@ cd_func ()
 	
 	# LIST LAST DIRS
 	if [[ $1 == "--" ]]; then
-	# if arg after -- is present, it is interpreted as must-match-word in path
-	matchWord="$2"
-	if [ -n "$matchWord" ];
-	then
-		selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" 11 0)
-		# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
-	else
-		# cat -n "$dir_hist" | head -11
-		selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" 11 0)
-	fi
+		# if arg after -- is present, it is interpreted as must-match-word in path
+		matchWord="$2"
+		if [ -n "$matchWord" ];then
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" 11 0)
+			# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
+		else
+			# cat -n "$dir_hist" | head -11
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" 11 0)
+		fi
 	 	return 0
 	fi
 	
