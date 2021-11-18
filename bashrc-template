@@ -51,7 +51,8 @@ cd_func ()
 	if [[ -n "$1" ]]; then
 		if [[ "$1" == "show" ]]; then
 			amount=$2
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$amount")
+			cat dir_hist | head -n "$amount"
+			# selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$amount")
 			return 0
 		fi
 		if [[ "$1" == "-" ]]; then
