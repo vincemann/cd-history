@@ -13,6 +13,7 @@
 # cd -			goto last directory without saving it again
 export DIR_HISTORY="§HOME/.dir-history"
 export DIR_HIST_AMOUNT_LOGIN=4
+export DIR_HIST_AMOUNT=11
 export CD_HIST_GUI=
 
 
@@ -52,6 +53,9 @@ cd_func ()
 	if [[ -n "$1" ]]; then
 		if [[ "$1" == "show" ]]; then
 			amount=$2
+			if [[ -n $amount ]]; then
+				amount=$DIR_HIST_AMOUNT
+			fi
 			cat "$dir_hist" | head -n "$amount"
 			# selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$amount")
 			return 0
@@ -67,11 +71,11 @@ cd_func ()
 		# if arg after -- is present, it is interpreted as must-match-word in path
 		matchWord="$2"
 		if [[ -n "$matchWord" ]];then
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" 11 0)
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" $DIR_HIST_AMOUNT 0)
 			# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
 		else
 			# cat -n "$dir_hist" | head -11
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" 11 0)
+			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" $DIR_HIST_AMOUNT 0)
 		fi
 	fi
 
@@ -122,7 +126,7 @@ cd_func ()
 }
 
 alias cd=cd_func
-alias cc='cd show 11'
+alias cc='cd show'
 alias c='cd --'
 
 # done to work smoothly together with ez-bash 
