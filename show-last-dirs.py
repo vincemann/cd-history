@@ -38,8 +38,8 @@ if len(sys.argv) > 4:
 
 dir_history_file = os.getenv("DIR_HISTORY")
 if dir_history_file == None or dir_history_file == "":
-	ezlib.eprint("cannot find dir dir history-file, set DIR_HISTORY env var")
-	exit(1)
+    ezlib.eprint("cannot find dir dir history-file, set DIR_HISTORY env var")
+    exit(1)
 
 ezlib.eprint("dir hist file: %s" % dir_history_file)
 last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
@@ -57,10 +57,8 @@ if selected_dir is None:
     exit(0)
 if clip == 1:
     ezlib.eprint("putting to clipboard")
-	ezlib.put_to_clipboard(selected_dir)
+    ezlib.put_to_clipboard(selected_dir)
 else:
     ezlib.eprint("returning dir")
-	# put out as return value for calling bash scripts
-	print(selected_dir)
-	
-
+    # put out as return value for calling bash scripts
+    print(selected_dir)
