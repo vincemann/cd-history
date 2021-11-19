@@ -100,6 +100,10 @@ cd_func ()
 	 command cd "$selected_dir"
 	 # if cd failed, return 1 and dont save invalid dir on stack
 	 [[ $? -ne 0 ]] && return 1
+
+	 if [[ -z "${selected_dir// }" ]]; then
+	 	return 1
+	 fi
 	 
 	 # save dir on stack
 	 tmp=`mktemp`
