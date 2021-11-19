@@ -50,6 +50,8 @@ if gui == "gui":
 else:
     selected_dir = ezlib.show_terminal_selection(last_dirs)
 
+ezlib.eprint("selected_dir: %s" % selected_dir)
+
 if selected_dir is None:
     ezlib.eprint("nothing selected - closing")
     exit(0)
