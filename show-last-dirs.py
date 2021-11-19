@@ -56,8 +56,10 @@ if selected_dir is None:
     ezlib.eprint("nothing selected - closing")
     exit(0)
 if clip == 1:
+    ezlib.eprint("putting to clipboard")
 	ezlib.put_to_clipboard(selected_dir)
 else:
+    ezlib.eprint("returning dir")
 	# put out as return value for calling bash scripts
 	print(selected_dir)
 	

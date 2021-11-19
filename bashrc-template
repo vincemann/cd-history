@@ -62,11 +62,12 @@ cd_func ()
 		fi
 	fi
 	
+	echo "gui mode: $CD_HIST_GUI"
 	# LIST LAST DIRS
 	if [[ $1 == "--" ]]; then
 		# if arg after -- is present, it is interpreted as must-match-word in path
 		matchWord="$2"
-		if [ -n "$matchWord" ];then
+		if [[ -n "$matchWord" ]];then
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" 11 0)
 			# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
 		else
@@ -75,6 +76,8 @@ cd_func ()
 		fi
 	 	return 0
 	fi
+
+	echo "selected_dir: $selected_dir"
 	
 	# LIST ALL DIRS
 	# if [[ $1 ==  "---" ]]; then
@@ -97,6 +100,7 @@ cd_func ()
 	 
 	 # CONVERT TO ABS PATH
 	 selected_dir=`readlink -f "$selected_dir"`
+	 echo "selected abs dir: $selected_dir"
 	 command cd "$selected_dir"
 	 # if cd failed, return 1 and dont save invalid dir on stack
 	 [[ $? -ne 0 ]] && return 1
