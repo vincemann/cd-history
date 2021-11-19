@@ -45,6 +45,7 @@ cd_func ()
 	local x2 selected_dir adir index dir_hist
 	local -i cnt
 	
+	selected_dir="$1"
 	dir_hist=$(get_dir_history)
 
 	# only show dirs in terminal second arg must be amount
