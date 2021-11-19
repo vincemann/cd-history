@@ -42,6 +42,13 @@ if dir_history_file == None or dir_history_file == "":
     exit(1)
 
 ezlib.eprint("dir hist file: %s" % dir_history_file)
+
+
+import signal
+def sigint_handler(signal, frame):
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, sigint_handler)
 last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
 ezlib.eprint("last dirs: %s" % last_dirs)
 
