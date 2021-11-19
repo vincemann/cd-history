@@ -74,7 +74,6 @@ cd_func ()
 			# cat -n "$dir_hist" | head -11
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" 11 0)
 		fi
-	 	return 0
 	fi
 
 	echo "selected_dir: $selected_dir"
