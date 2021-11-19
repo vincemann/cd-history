@@ -41,6 +41,7 @@ if dir_history_file == None or dir_history_file == "":
 	ezlib.eprint("cannot find dir dir history-file, set DIR_HISTORY env var")
 	exit(1)
 
+ezlib.eprint("dir hist file: %s" % dir_history_file)
 last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
 
 
@@ -49,6 +50,9 @@ if gui == "gui":
 else:
     selected_dir = ezlib.show_terminal_selection(last_dirs)
 
+if selected_dir is None:
+    ezlib.eprint("nothing selected - closing")
+    exit(0)
 if clip == 1:
 	ezlib.put_to_clipboard(selected_dir)
 else:
