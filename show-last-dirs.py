@@ -43,7 +43,7 @@ if dir_history_file == None or dir_history_file == "":
 
 ezlib.eprint("dir hist file: %s" % dir_history_file)
 last_dirs = ezlib.find_recent_dirs(dir_history_file,last_dirs_amount,matchword)
-
+ezlib.eprint("last dirs: %s" % last_dirs)
 
 if gui == "gui":
     selected_dir = ezlib.show_gui_selection(last_dirs)
