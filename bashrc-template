@@ -85,6 +85,10 @@ cd_func ()
 	# 	cat -n "$dir_hist" | more
 	#  	return 0
 	# fi
+
+	if [[ "$1" ==  "~" ]]; then
+		selected_dir="$HOME"
+	fi
 	
 	
 	# newDir=$1
