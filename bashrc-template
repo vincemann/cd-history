@@ -7,10 +7,14 @@
 # aliases cd with bashfunction providing additional features
 
 # USAGE
-# cd -- 		display recent history and goto selected
-# cd -- foo		display recent history results containing word foo and goto selected
-# cd -- show 10 only display recent history in terminal
-# cd -			goto last directory without saving it again
+# traverse last dirs:  
+# cd -  
+# display recent history (always in terminal):  
+# cd show 	
+# display recent dirs and cd into selected dir:  
+# cd --  
+# display recent dirs containing word foo and cd into selected dir:   
+# cd -- foo	 
 export DIR_HISTORY="§HOME/.dir-history"
 export DIR_HIST_AMOUNT_LOGIN=4
 export DIR_HIST_AMOUNT=11
