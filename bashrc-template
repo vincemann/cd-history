@@ -15,6 +15,8 @@ export DIR_HISTORY="§HOME/.dir-history"
 export DIR_HIST_AMOUNT_LOGIN=4
 export DIR_HIST_AMOUNT=11
 export CD_HIST_GUI=
+export last_dir_count=1
+
 
 
 get_dir_history()
@@ -36,11 +38,12 @@ goto_last_dir()
 	dir_hist=$(get_dir_history)
 	if [[ -f "$dir_hist" ]]; then
         # The file is not-empty.
-        last_dir=$(cat "$dir_hist" | head -n 2 | tail -n 1)
+        last_dir=$(cat "$dir_hist" | head -n $last_dir_count | tail -n 1)
         if [[ -d "$last_dir" ]]; then
-        	command cd "$last_dir"
+        	cd_func "$last_dir"
+        	last_dir_count=$((last_dir_count+1))
         else
-        	command cd
+        	cd_func ~
         fi
 	fi
 }
@@ -137,6 +140,7 @@ cd_func ()
 alias cd=cd_func
 alias cc='cd show'
 alias c='cd --'
+alias c-='cd -'
 
 # done to work smoothly together with ez-bash 
 if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
