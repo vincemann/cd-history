@@ -34,12 +34,17 @@ goto_last_dir()
 {
 	local dir_hist
 	dir_hist=$(get_dir_history)
-	if [ -s dir_hist ]; then
+	if [[ -f "$dir_hist" ]]; then
         # The file is not-empty.
-        last_dir=$(cat "$dir_hist" | head -n 1)
-        command cd "$last_dir"
+        last_dir=$(cat "$dir_hist" | head -n 2 | tail -n 1)
+        if [[ -d "$last_dir" ]]; then
+        	command cd "$last_dir"
+        else
+        	command cd
+        fi
 	fi
 }
+
 
 cd_func ()
 {
