@@ -1,19 +1,22 @@
 # cd-history  
   
-extends cd by system-wide permanent dir-history stack + let user cd into recently visited dirs  
-  
-works by aliasing cd with bashfunction (in /etc/bash.bashrc), that implements those features  
-to make the history system-wide
+extends cd by system-wide permanent dir-history stack + let user cd into recently visited dirs and more  
+works by aliasing cd with bashfunction that implements features  
   
 ## features  
-* display recent history with indexes:  
-* cd -- 	
-* display recent history results containing word foo:  
+* supports gui and terminal based dir selection  
+* traverse last dirs:  
+* cd -  
+* display recent history (always in terminal):  
+* cd show 	
+* display recent dirs and cd into selected dir:  
+* cd --  
+* display recent dirs containing word foo and cd into selected dir:   
 * cd -- foo	 
-* cd into dir from histoty at index 3:  
-* cd - 3 	
-* display whole history:  
-* cd --- 	 
   
 ## install  
-./install.sh   
+./install.sh gui|terminal local|system  
+  
+## requirements  
+* bash  
+* python3  
