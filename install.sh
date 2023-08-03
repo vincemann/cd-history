@@ -35,6 +35,7 @@ load_libs()
 {
 	echo "loading dependencies"
 	git clone https://github.com/vincemann/ez-bash.git
+	rm -rf ./lib
 	mv ./ez-bash/lib .
 	rm -rf ./ez-bash
 }
