@@ -4,6 +4,8 @@ Lets you display and cd into recently visited dirs.
 Works in gui and terminal environments (either gui- or terminal- prompt ).  
 Can be installed system wide or just for one user.   
 
+![](demo3.gif)
+
 ## usage  
 * display recent dirs and cd into selected dir:   
 * ```cd -- ```  
@@ -13,7 +15,6 @@ Can be installed system wide or just for one user.
 * ```cd -```  
 * only show recent history (terminal only):  
 * ```cd show```  
-
   
 ## installation  
 ```bash
