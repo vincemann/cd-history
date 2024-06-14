@@ -1,22 +1,23 @@
 # cd-history  
+Saves history of visited dirs in bash.    
+Lets you display and cd into recently visited dirs.  
+Works in gui and terminal environments (either gui- or terminal- prompt ).  
+Can be installed system wide or just for one user.   
+
+## usage  
+* display recent dirs and cd into selected dir:   
+* ```cd -- ```  
+* display recent dirs with path containing foo and cd into selected dir:   
+* ```cd -- foo```	  
+* move to last dir:
+* ```cd -```  
+* only show recent history (terminal only):  
+* ```cd show```  
+
   
-extends cd by system-wide permanent dir-history stack + let user cd into recently visited dirs and more  
-works by aliasing cd with bashfunction that implements features  
-  
-## features  
-* supports gui and terminal based dir selection  
-* traverse last dirs:  
-* cd -  
-* display recent history (always in terminal):  
-* cd show 	
-* display recent dirs and cd into selected dir:  
-* cd --  
-* display recent dirs containing word foo and cd into selected dir:   
-* cd -- foo	 
-  
-## install  
-./install.sh gui|terminal local|system  
-  
-## requirements  
-* bash  
-* python3  
+## installation  
+```bash
+git clone https://github.com/vincemann/cd-history
+cd cd-history
+./install.sh (gui|terminal) (local|system)
+```  
