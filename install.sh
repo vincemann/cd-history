@@ -2,11 +2,11 @@
 
 
 GUI=$1
-LOCAL=$2
+SCOPE=$2
 
 print_usage()
 {
-	echo "(cd-history)usage ./install gui|terminal local|system"
+	echo "usage: ./install gui|terminal local|system"
 	exit 1
 }
 
@@ -19,56 +19,58 @@ else
 fi
 
 
-if [[ $LOCAL = "local" ]];then
+local_installation=false
+root=false
+if [[ $SCOPE = "local" ]];then
 	echo "installing locally"
-elif [[ $LOCAL = "system" ]];then
+	local_installation=true
+elif [[ $SCOPE = "system" ]];then
+	root=true
 	echo "installing system wide"
 else
 	print_usage
 fi
 
+# install python if needed
+./install-python.sh
 
-sudo apt install -y python3-tk
 
-
-load_libs()
-{
-	echo "loading dependencies"
-	git clone https://github.com/vincemann/ez-bash.git
-	rm -rf ./lib
-	mv ./ez-bash/lib .
-	rm -rf ./ez-bash
-}
-
-load_libs
-
+# which file to edit?
 bashrc="/etc/bash.bashrc"
-if [[ "$LOCAL" = "local" ]]; then
-	bashrc="$HOME/.bashrc"
+if $local_installation; then
+    bashrc="$HOME/.bashrc"
 fi
+echo "Editing file: $bashrc"
 
-start_pattern="# CD HISTORY START"
-end_pattern="# CD HISTORY END"
-start_found=$(sudo cat "$bashrc" | grep --count "$start_pattern")
-end_found=$(sudo cat "$bashrc" | grep --count "$end_pattern")
 
 # backup
-mkdir -p "$HOME/.ezbash-suite-backups"
-sudo cp "$bashrc" "$HOME/.ezbash-suite-backups/.cd-history-bashrc.bak"
+./backup.sh "$SCOPE" "$bashrc"
 
-# replace vars
+
+
+# add paragraph
+start_pattern="# CD HISTORY START"
+end_pattern="# CD HISTORY END"
+start_found=$(cat "$bashrc" | grep --count "$start_pattern")
+end_found=$(cat "$bashrc" | grep --count "$end_pattern")
 template_file=$(mktemp)
 cat bashrc-template > "$template_file"
 sed -i -e "s@§HOME@$HOME@g" "$template_file"
 
 
-sudo bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file"
-sudo bash ./lib/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI"
+user="normal"
+if $root; then
+	user="root"
+fi
+echo "replacing/adding paragraph"
+bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file" "$user"
+echo "updating/adding gui/terminal line to: $GUI"
+bash ./lib/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI" "$user"
+echo "done updating file"
 
-
-echo "creating symlink in path (/usr/local/bin)"
+echo "creating symlink in path: /usr/local/bin/show-last-dirs.py -> $(pwd)/show-last-dirs.py"
 chmod a+x "./show-last-dirs.py"
-sudo ln -sf "$(pwd)/show-last-dirs.py" "/usr/local/bin/show-last-dirs"
+ln -sf "$(pwd)/show-last-dirs.py" "/usr/local/bin/show-last-dirs"
 
 echo "installed"
 echo "restart terminal for changes to take effect"

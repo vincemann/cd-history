@@ -15,6 +15,7 @@
 # cd --  
 # display recent dirs containing word foo and cd into selected dir:   
 # cd -- foo	 
+
 export DIR_HISTORY="§HOME/.dir-history"
 export DIR_HIST_AMOUNT_LOGIN=4
 export DIR_HIST_AMOUNT=11
@@ -69,7 +70,6 @@ cd_func ()
 				amount=$DIR_HIST_AMOUNT
 			fi
 			cat "$dir_hist" | head -n "$amount"
-			# selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" "$amount")
 			return 0
 		fi
 		if [[ "$1" == "-" ]]; then
@@ -84,36 +84,16 @@ cd_func ()
 		matchWord="$2"
 		if [[ -n "$matchWord" ]];then
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" $DIR_HIST_AMOUNT 0)
-			# cat -n "$dir_hist" | grep -i "$matchWord" | head -11
 		else
-			# cat -n "$dir_hist" | head -11
 			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" $DIR_HIST_AMOUNT 0)
 		fi
 	fi
 
-	
-	# LIST ALL DIRS
-	# if [[ $1 ==  "---" ]]; then
-	# 	cat -n "$dir_hist" | more
-	#  	return 0
-	# fi
 
 	if [[ "$1" ==  "~" ]]; then
 		selected_dir="$HOME"
 	fi
 	
-	
-	# newDir=$1
-	# [[ -z $1 ]] && newDir=$HOME
-	
-	# # extract dir by index and update dir, that gets cd into -> newDir
-	# if [[ ${newDir:0:1} == '-' ]]; then
-	# 	index=$2
-	# 	[[ -z $index ]] && index=1
-	# 	adir=`sed "${index}q;d" "$dir_hist"`
-	#  	[[ -z $adir ]] && return 1
-	#   	newDir=$adir
-	#  fi
 	 
 	 # CONVERT TO ABS PATH
 	 selected_dir=`readlink -f "$selected_dir"`
@@ -142,13 +122,10 @@ cd_func ()
 }
 
 alias cd=cd_func
-alias cc='cd show'
-alias c='cd --'
-alias c-='cd -'
 
-# done to work smoothly together with ez-bash 
+
+# show last visited dirs and move to last dir on start of bash
 if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
-	# show last visited dirs and move to last dir on start of bash
 	cd show "$DIR_HIST_AMOUNT_LOGIN"
 	goto_last_dir
 fi
