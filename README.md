@@ -13,7 +13,7 @@ Can be installed system wide or just for one user.
 * ```cd -- foo```	  
 * move to last dir:
 * ```cd -```  
-* only show recent history (terminal only):  
+* show recent history (without selection):  
 * ```cd show```  
   
 ## installation  
