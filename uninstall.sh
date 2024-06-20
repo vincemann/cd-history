@@ -27,7 +27,7 @@ echo "Editing file: $bashrc"
 
 
 # Backup
-./backup.sh "$SCOPE" "$bashrc"
+./libs/backup.sh "$SCOPE" "$bashrc"
 
 
 echo "modifying bashrc file..."

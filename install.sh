@@ -1,51 +1,71 @@
 #!/bin/bash
 
 
+# Initialize variables
 GUI=$1
 SCOPE=$2
 
-print_usage()
-{
-	echo "usage: ./install gui|terminal local|system"
-	exit 1
+# Function to print usage
+print_usage() {
+    echo "usage: $0 gui|terminal local|system"
+    exit 1
 }
 
-if [[ $GUI = "gui" ]]; then
-	echo "installing gui version"
-elif [[ $GUI = "terminal" ]]; then
-	echo "installing terminal version"
-else
-	print_usage
-fi
-
+# Parse arguments
+case $GUI in
+    gui)
+        echo "installing GUI version"
+        ;;
+    terminal)
+        echo "installing terminal version"
+        ;;
+    *)
+        print_usage
+        ;;
+esac
 
 local_installation=false
 root=false
-if [[ $SCOPE = "local" ]];then
-	echo "installing locally"
-	local_installation=true
-elif [[ $SCOPE = "system" ]];then
-	root=true
-	echo "installing system wide"
-else
-	print_usage
+
+case $SCOPE in
+    local)
+        echo "installing locally"
+        local_installation=true
+        ;;
+    system)
+        root=true
+        echo "installing system wide"
+        ;;
+    *)
+        print_usage
+        ;;
+esac
+
+# Determine user context
+user="normal"
+if $root; then
+    user="root"
 fi
 
 # install python if needed
-./install-python.sh
+./libs/install-python.sh
 
 
-# which file to edit?
+# which bashrc file to edit?
 bashrc="/etc/bash.bashrc"
 if $local_installation; then
     bashrc="$HOME/.bashrc"
 fi
 echo "Editing file: $bashrc"
 
+# edit files as root?
+user="normal"
+if $root; then
+	user="root"
+fi
 
 # backup
-./backup.sh "$SCOPE" "$bashrc"
-
+./libs/backup.sh "$SCOPE" "$bashrc"
 
 
 # add paragraph
@@ -56,21 +76,20 @@ end_found=$(cat "$bashrc" | grep --count "$end_pattern")
 template_file=$(mktemp)
 cat bashrc-template > "$template_file"
 sed -i -e "s@§HOME@$HOME@g" "$template_file"
+echo "adding bashrc paragraph"
+bash ./libs/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file" "$user"
 
 
-user="normal"
-if $root; then
-	user="root"
-fi
-echo "replacing/adding paragraph"
-bash ./lib/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file" "$user"
-echo "updating/adding gui/terminal line to: $GUI"
-bash ./lib/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI" "$user"
-echo "done updating file"
+# setting env vars in bashrc
+echo "setting FH_MODE to: $GUI"
+bash ./libs/replace_or_add_line.sh "$bashrc" "export CD_HIST_GUI=" "export CD_HIST_GUI=$GUI" "$user"
+echo "done updating bashrc"
 
-echo "creating symlink in path: /usr/local/bin/show-last-dirs.py -> $(pwd)/show-last-dirs.py"
-chmod a+x "./show-last-dirs.py"
-ln -sf "$(pwd)/show-last-dirs.py" "/usr/local/bin/show-last-dirs"
+# create symlink
+name="cd-history"
+echo "creating symlink in path: /usr/local/bin/$name -> $(pwd)/$name.py"
+chmod a+x "./cd-history.py"
+ln -sf "$(pwd)/$name.py" "/usr/local/bin/$name"
 
 echo "installed"
 echo "restart terminal for changes to take effect"

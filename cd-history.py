@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from lib import ezlib as ezlib
+from libs import ezlib as ezlib
 import sys
 import os
 

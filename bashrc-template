@@ -16,7 +16,7 @@
 # display recent dirs containing word foo and cd into selected dir:   
 # cd -- foo	 
 
-export DIR_HISTORY="§HOME/.dir-history"
+export DIR_HISTORY="§HOME/.cd-history"
 export DIR_HIST_AMOUNT_LOGIN=4
 export DIR_HIST_AMOUNT=11
 export CD_HIST_GUI=
@@ -28,7 +28,7 @@ get_dir_history()
 {
 	dir_hist=`echo $DIR_HISTORY`
 	if [ -z "$dir_hist" ]; then
-		dir_hist="~/.dir-history"
+		dir_hist="~/.cd-history"
 	fi
 	# create history stack if not already there
 	if [[ ! -e "$dir_hist" ]]; then
@@ -83,9 +83,9 @@ cd_func ()
 		# if arg after -- is present, it is interpreted as must-match-word in path
 		matchWord="$2"
 		if [[ -n "$matchWord" ]];then
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "$matchWord" $DIR_HIST_AMOUNT 0)
+			selected_dir=$(cd-history "$CD_HIST_GUI" "$matchWord" $DIR_HIST_AMOUNT 0)
 		else
-			selected_dir=$(show-last-dirs "$CD_HIST_GUI" "" $DIR_HIST_AMOUNT 0)
+			selected_dir=$(cd-history "$CD_HIST_GUI" "" $DIR_HIST_AMOUNT 0)
 		fi
 	fi
 
