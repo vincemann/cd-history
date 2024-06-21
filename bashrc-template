@@ -18,8 +18,8 @@ export CD_HISTORY="§HOME/.cd_history"
 # how many dirs to display on opening bash 
 export CD_DIRS_LOGIN=4
 # how many dirs to display on execution
-export CH_DIRS=11
-export CH_MODE=
+export CD_DIRS=11
+export CD_MODE=
 export last_dir_count=1
 
 
@@ -84,9 +84,9 @@ cd_func ()
 		# if arg after -- is present, it is interpreted as must-match-word in path
 		matchWord="$2"
 		if [[ -n "$matchWord" ]];then
-			selected_dir=$(cd-history "$CD_MODE" "$matchWord" $CH_DIRS 0)
+			selected_dir=$(cd-history "$CD_MODE" "$matchWord" $CD_DIRS 0)
 		else
-			selected_dir=$(cd-history "$CD_MODE" "" $CH_DIRS 0)
+			selected_dir=$(cd-history "$CD_MODE" "" $CD_DIRS 0)
 		fi
 	fi
 

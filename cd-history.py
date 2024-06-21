@@ -36,9 +36,9 @@ if len(sys.argv) > 4:
         exit(1)
     # ezlib.eprint("clip is %d" % clip)
 
-dir_history_file = os.getenv("DIR_HISTORY")
+dir_history_file = os.getenv("CD_HISTORY")
 if dir_history_file == None or dir_history_file == "":
-    ezlib.eprint("cannot find dir dir history-file, set DIR_HISTORY env var")
+    ezlib.eprint("cannot find dir dir history-file, set CD_HISTORY env var")
     exit(1)
 
 # ezlib.eprint("dir hist file: %s" % dir_history_file)

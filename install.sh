@@ -82,7 +82,7 @@ bash ./libs/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern
 
 # setting env vars in bashrc
 echo "setting FH_MODE to: $GUI"
-bash ./libs/replace_or_add_line.sh "$bashrc" "export CH_MODE=" "export CH_MODE=$GUI" "$user"
+bash ./libs/replace_or_add_line.sh "$bashrc" "export CD_MODE=" "export CD_MODE=$GUI" "$user"
 echo "done updating bashrc"
 
 # create symlink
