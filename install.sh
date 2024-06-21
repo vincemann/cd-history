@@ -48,7 +48,7 @@ if $root; then
 fi
 
 # install python if needed
-./libs/install-python.sh
+./scripts/install-python.sh
 
 
 # which bashrc file to edit?
@@ -65,7 +65,7 @@ if $root; then
 fi
 
 # backup
-./libs/backup.sh "$SCOPE" "$bashrc"
+./scripts/backup.sh "$SCOPE" "$bashrc"
 
 
 # add paragraph
@@ -77,12 +77,12 @@ template_file=$(mktemp)
 cat bashrc-template > "$template_file"
 sed -i -e "s@§HOME@$HOME@g" "$template_file"
 echo "adding bashrc paragraph"
-bash ./libs/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file" "$user"
+bash ./scripts/replace_or_add_paragraph.sh "$bashrc" "$start_pattern" "$end_pattern" "$template_file" "$user"
 
 
 # setting env vars in bashrc
 echo "setting FH_MODE to: $GUI"
-bash ./libs/replace_or_add_line.sh "$bashrc" "export CD_MODE=" "export CD_MODE=$GUI" "$user"
+bash ./scripts/replace_or_add_line.sh "$bashrc" "export CD_HIST_MODE=" "export CD_HIST_MODE=$GUI" "$user"
 echo "done updating bashrc"
 
 # create symlink

@@ -27,7 +27,7 @@ echo "Editing file: $bashrc"
 
 
 # Backup
-./libs/backup.sh "$SCOPE" "$bashrc"
+./scripts/backup.sh "$SCOPE" "$bashrc"
 
 
 echo "modifying bashrc file..."
@@ -48,7 +48,7 @@ if [[ $start_found -gt 0 && $end_found -gt 0 ]]; then
     fi
 
     echo "removing symlink"
-    rm -f /usr/local/bin/show-last-dirs
+    rm -f /usr/local/bin/cd-history
 
     echo "Successfully uninstalled"
 else
