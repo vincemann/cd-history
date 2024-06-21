@@ -1,5 +1,3 @@
-
-
 # CD HISTORY START	by vincemann @ https://github.com/vincemann/cd-history ____________________________________________________________________________________________
 
 # extends functionality of cd:
@@ -16,19 +14,22 @@
 # display recent dirs containing word foo and cd into selected dir:   
 # cd -- foo	 
 
-export DIR_HISTORY="§HOME/.cd-history"
-export DIR_HIST_AMOUNT_LOGIN=4
-export DIR_HIST_AMOUNT=11
-export CD_HIST_GUI=
+export CD_HISTORY="§HOME/.cd_history"
+# how many dirs to display on opening bash 
+export CD_DIRS_LOGIN=4
+# how many dirs to display on execution
+export CH_DIRS=11
+export CH_MODE=
 export last_dir_count=1
 
 
 
 get_dir_history()
 {
-	dir_hist=`echo $DIR_HISTORY`
+	dir_hist=`echo $CD_HISTORY`
 	if [ -z "$dir_hist" ]; then
-		dir_hist="~/.cd-history"
+		echo "CD_HISTORY not set"
+		return
 	fi
 	# create history stack if not already there
 	if [[ ! -e "$dir_hist" ]]; then
@@ -67,7 +68,7 @@ cd_func ()
 		if [[ "$1" == "show" ]]; then
 			amount=$2
 			if [[ ! -n "$amount" ]]; then
-				amount=$DIR_HIST_AMOUNT
+				amount=$CD_HIST_AMOUNT
 			fi
 			cat "$dir_hist" | head -n "$amount"
 			return 0
@@ -83,9 +84,9 @@ cd_func ()
 		# if arg after -- is present, it is interpreted as must-match-word in path
 		matchWord="$2"
 		if [[ -n "$matchWord" ]];then
-			selected_dir=$(cd-history "$CD_HIST_GUI" "$matchWord" $DIR_HIST_AMOUNT 0)
+			selected_dir=$(cd-history "$CD_MODE" "$matchWord" $CH_DIRS 0)
 		else
-			selected_dir=$(cd-history "$CD_HIST_GUI" "" $DIR_HIST_AMOUNT 0)
+			selected_dir=$(cd-history "$CD_MODE" "" $CH_DIRS 0)
 		fi
 	fi
 
@@ -126,9 +127,8 @@ alias cd=cd_func
 
 # show last visited dirs and move to last dir on start of bash
 if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
-	cd show "$DIR_HIST_AMOUNT_LOGIN"
+	cd show "$CD_DIRS_LOGIN"
 	goto_last_dir
 fi
 
 # CD HISTORY END ____________________________________________________________________________________________
-
