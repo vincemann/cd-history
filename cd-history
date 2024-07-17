@@ -1,0 +1,11 @@
+#!/bin/bash
+# Resolve the script's path even if it's a symlink
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+
+# Change to the script directory
+cd "$SCRIPT_DIR"
+
+source ./.venv/bin/activate
+python -m cd_history.main "$@"
+deactivate

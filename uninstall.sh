@@ -5,14 +5,14 @@ print_usage() {
     exit 1
 }
 
-SCOPE=$1
+scope=$1
 
 local_installation=false
-if [[ "$SCOPE" == "local" ]]; then
-    echo "Uninstalling locally"
+if [[ "$scope" == "local" ]]; then
+    echo "uninstalling locally"
     local_installation=true
-elif [[ "$SCOPE" == "system" ]]; then
-    echo "Uninstalling system-wide"
+elif [[ "$scope" == "system" ]]; then
+    echo "uninstalling system-wide"
 else
     print_usage
 fi
@@ -23,36 +23,50 @@ bashrc="/etc/bash.bashrc"
 if $local_installation; then
     bashrc="$HOME/.bashrc"
 fi
-echo "Editing file: $bashrc"
+echo "editing file: $bashrc"
 
 
-# Backup
-./scripts/backup.sh "$SCOPE" "$bashrc"
+# backup
+./scripts/install/backup.sh "$scope" "$bashrc"
 
 
-echo "modifying bashrc file..."
 # Remove cd history paragraph from bashrc
+echo "modifying bashrc file..."
 start="# CD HISTORY START"
 end="# CD HISTORY END"
 start_found=$(cat "$bashrc" | grep --count "$start")
 end_found=$(cat "$bashrc" | grep --count "$end")
+
+# preservers ownership and permissions, uses sudo if 'root' arg is present
+# usage: move src target [root]
+move()
+{
+    src="$1"
+    target="$2"
+    root="$3"
+    if [[ "$root" == "root" ]];then
+        sudo install -m "$(stat -c '%a' "$target")" -o "$(stat -c '%U' "$target")" -g "$(stat -c '%G' "$target")" "$src" "$target"
+    else
+        install -m "$(stat -c '%a' "$target")" -o "$(stat -c '%U' "$target")" -g "$(stat -c '%G' "$target")" "$src" "$target"
+    fi
+}
 
 if [[ $start_found -gt 0 && $end_found -gt 0 ]]; then
     temp_file=$(mktemp)
     sed "/$start/,/$end/d" "$bashrc" > "$temp_file"
 
     if $local_installation; then
-        mv "$temp_file" "$bashrc"
+        move "$temp_file" "$bashrc"
     else
-        sudo mv "$temp_file" "$bashrc"
+        move "$temp_file" "$bashrc" root
     fi
 
-    echo "removing symlink"
-    rm -f /usr/local/bin/cd-history
+    ./scripts/install/remove-symlink.sh cd-history $scope
+    ./scripts/install/remove-symlink.sh cd-hist-get $scope
 
-    echo "Successfully uninstalled"
+    echo "successfully uninstalled"
 else
-    echo "Start and end pattern not found"
-    echo "Already uninstalled, otherwise remove paragraph manually from $bashrc"
+    echo "start and end pattern not found"
+    echo "already uninstalled, otherwise remove paragraph manually from $bashrc"
 fi
 

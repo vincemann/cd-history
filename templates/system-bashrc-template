@@ -1,0 +1,153 @@
+
+# CD HISTORY START	by vincemann @ https://github.com/vincemann/cd-history ____________________________________________________________________________________________
+
+# Extends functionality of cd by aliasing with bashfunction:
+# Saves visited directories in cd_history file and let user cd into recently visited dirs
+
+# --- USAGE ---
+# cd -- 			-> show recent dirs, let user select and cd into selected dir
+# cd -- foo 		-> show recent dirs, that have 'foo' in their abs path, let user select and cd into selected dir
+# cd --show [n]		-> show recent n dirs
+# cd -|+			-> traverse cd history in both directions
+# cd /path/to/dir 	-> normal case, just cd into dir and store it in cd_history file
+
+
+
+# --- VARIABLES TO PLAY AROUND WITH ---
+# file that contains your cd history
+export CD_HIST_FILE=
+
+# gui or terminal mode?
+export CD_HIST_MODE=
+
+# how many result dirs to display
+export CD_HIST_RESULTS=25
+
+# -------------------------------------
+
+
+# --- INTERNALS ---
+export CD_HIST_STACK_PTR=0
+
+# impl this in bash to speed things up, virt env takes long to init
+# also needs be to impl as bash function, cant be script
+traverse()
+{
+    direction="$1"
+	local dir_hist
+	dir_hist=$(cd-hist-get)
+    local adjustment
+    adjustment=$CD_HIST_STACK_PTR
+
+    # find adjustment value based on direction
+    if [[ "$direction" == "prev" ]];then
+        adjustment=$((adjustment+1))
+    elif [[ "$direction" == "next" ]];then
+        adjustment=$((adjustment-1))
+    else
+        echo "usage: traverse [next|prev]"
+        exit 1
+    fi
+
+	if [[ -f "$dir_hist" ]]; then
+        last_dir=$(cat "$dir_hist" | tail -n $adjustment | head -n 1)
+        if [[ -d "$last_dir" ]]; then
+            CD_HIST_STACK_PTR=$adjustment
+        	cd_func "$last_dir" "--traverse"
+        fi
+	fi
+}
+
+# this wrapper will be executed instead of cd
+# needs to be impl as bash function, cant be a script, bc orignal cd wont be able to acutally cd into dir in this session
+cd_func ()
+{
+	local selected_dir
+	local amount_results
+	local filter
+
+	# handle show: 'cd --show [n]'
+	if [[ "$1" == "--show" ]]; then
+		amount_results=$2
+	    if [[ -z "$amount_results" ]]; then
+	        amount_results=$CD_HIST_RESULTS
+	    elif [[ ! "$amount_results" =~ ^[0-9]+$ ]]; then
+	        echo "Error: The argument for --show must be a number."
+	        return 1
+    	fi
+    	cd-history --action=show --results=$amount_results
+    	return 0
+	fi
+
+
+	selected_dir="$1"
+	
+	# handle 'cd --' and 'cd -- foo' -> update selected_dir
+	if [[ "$1" == "--" ]]; then
+		filter="$2"
+		if [[ -n "$filter" ]];then
+			selected_dir="$(cd-history --filter="$filter")"
+		else
+			selected_dir="$(cd-history)"
+		fi
+	fi
+
+	# handle traverse: 'cd -'
+	if [[ "$1" == "-" ]]; then
+		traverse "prev"
+		return 0
+	fi
+	# handle traverse 'cd +'
+	if [[ "$1" == "+" ]]; then
+		traverse "next"
+		return 0
+	fi
+
+
+	# is traverse active?
+	local argv=( "$@" )
+    local last=${argv[$(( ${#argv[@]} - 1 ))]}
+    traverse=false
+    if [[ "$last" == "--traverse" ]]; then
+        traverse=true
+    else
+    	# reset traverse counter
+        CD_HIST_STACK_PTR=1
+    fi
+	 
+	# convert to abs path
+	selected_dir="$(readlink -f "$selected_dir")"
+	# actually cd into dir
+	command cd "$selected_dir"
+
+
+	# if cd failed, return 1 and dont save invalid dir on stack
+	[[ $? -ne 0 ]] && return 1
+
+
+	if [[ $traverse == "false" ]];then
+		# command worked -> append selected dir to cd_history and clean
+		(bash -c "cd-history append \"$selected_dir\" > /dev/null 2>&1 && cd-history clean > /dev/null 2>&1" > /dev/null 2>&1 & disown)
+	fi
+
+	return 0
+}
+
+alias cd=cd_func
+
+is_local_installation_present() {
+    if grep -q "CD HISTORY START" "${HOME}/.bashrc"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# show recently visited dirs and cd into most recent dir on start of bash
+if [[ -z "$SUDO_BASH_SUBSHELL" ]] ;then
+	if ! is_local_installation_present; then
+		traverse "prev"
+	fi
+fi
+
+# CD HISTORY END ____________________________________________________________________________________________
