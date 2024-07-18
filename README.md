@@ -1,19 +1,17 @@
 # cd-history  
-Saves history of visited dirs in bash.    
-Lets you display and cd into recently visited dirs.  
-Works in gui and terminal environments (either gui- or terminal- prompt ).  
-Can be installed system wide or just for one user.   
+Keeps track of all visited dirs in bash.    
+You can display recently visited dirs and cd into them.  
+Works in gui and terminal environments and can be installed system wide or locally just for one user.   
+
+![demo](demo.gif)
 
 ## usage  
 * display recent dirs and cd into selected dir:   
 * ```cd -- ```  
-* display recent dirs with path containing foo and cd into selected dir:   
+* display recent dirs with path containing 'foo' and cd into selected dir:   
 * ```cd -- foo```	  
-* move to last dir:
-* ```cd -```  
-* only show recent history (terminal only):  
-* ```cd show```  
-
+* traverse dir history:
+* ```cd -|+```  
   
 ## installation  
 ```bash
