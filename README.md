@@ -23,3 +23,4 @@ cd cd-history
 The install script modifies your bashrc (either ```~/.bashrc``` or ```/etc/bash.bashrc```) and inserts an alias for cd to a bash function.  
 This bash function is executed when typing ```cd```. This bash function executes a python script, that will save all dirs you visited in 
 ```~/.cd_history``` or ```/opt/.cd_history``` depending on installation scope.  
+A backup of your bashrc is stored at ```~/.cd-history-backup```.  
