@@ -17,5 +17,9 @@ Works in gui and terminal environments and can be installed system wide or local
 ```bash
 git clone https://github.com/vincemann/cd-history
 cd cd-history
-./install.sh (gui|terminal) (local|system)
+./install.sh gui|terminal local|system
 ```  
+## how it works  
+The install script modifies your bashrc (either ```~/.bashrc``` or ```/etc/bash.bashrc```) and inserts an alias for cd to a bash function.  
+This bash function is executed when typing ```cd```. This bash function executes a python script, that will save all dirs you visited in 
+```~/.cd_history``` or ```/opt/.cd_history``` depending on installation scope.  
