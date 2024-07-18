@@ -1,0 +1,13 @@
+#!/bin/bash
+# usage: var=$(cd-hist-get)
+# impl this in bash to speed things up, virt env takes long to init
+
+dir_hist=`echo $CD_HIST_FILE`
+if [ -z "$dir_hist" ]; then
+	return
+fi
+# create history file if not already there
+if [[ ! -e "$dir_hist" ]]; then
+	touch "$dir_hist"
+fi
+echo "$dir_hist"
