@@ -12,7 +12,18 @@ Works in gui and terminal environments and can be installed system wide or local
 * ```cd -- foo```	  
 * traverse dir history:
 * ```cd -|+```  
-  
+
+***env vars with examples***  
+Note that some of these are set by the install script in your bashrc  
+- gui or terminal mode  
+- ```CD_HIST_MODE=gui```
+- how many results to display
+- ```CD_HIST_RESULTS=25```  
+- how many dirs to scan at most
+- ```CD_HIST_MAX_SCANNED=-1```
+- where to store the history
+- ```CD_HIST_FILE=/home/user/.cd_history```  
+
 ## installation  
 ```bash
 git clone https://github.com/vincemann/cd-history
