@@ -38,6 +38,11 @@ else
     install_packages
 fi
 
+
+if command_exists apt-get; then
+    sudo apt install python3-venv
+fi
+
 # Continue with your script that requires python3 and python3-tk
 echo "python is availible:"
 python3 --version
