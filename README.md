@@ -35,3 +35,8 @@ The install script modifies your bashrc (either ```~/.bashrc``` or ```/etc/bash.
 This bash function is executed when typing ```cd```. This bash function executes a python script, that will save all dirs you visited in 
 ```~/.cd_history``` or ```/opt/.cd_history``` depending on installation scope.  
 A backup of your bashrc is stored at ```~/.cd-history-backup```.  
+
+## tip  
+install fuzzy finder and add this in your bashrc  
+```alias c='cd $(cd-history --action=show --mode=terminal --results=1000 | fzf --tiebreak=index)'```  
+press c in terminal and navigate fast with search function  
