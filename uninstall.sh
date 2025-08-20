@@ -5,6 +5,16 @@ print_usage() {
     exit 1
 }
 
+# Resolve the script's path even if it's a symlink
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+
+# Change to the script directory
+cd "$SCRIPT_DIR"
+
+
+rm -rf .venv
+
 scope=$1
 
 local_installation=false
@@ -28,7 +38,6 @@ echo "editing file: $bashrc"
 
 # backup
 ./scripts/install/backup.sh "$scope" "$bashrc"
-
 
 # Remove cd history paragraph from bashrc
 echo "modifying bashrc file..."
