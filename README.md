@@ -29,7 +29,12 @@ Note that some of these are set by the install script in your bashrc
 git clone https://github.com/vincemann/cd-history
 cd cd-history
 ./install.sh gui|terminal local|system
-```  
+```
+## uninstall  
+```bash
+./uninstall.sh local|system
+```
+  
 ## how it works  
 The install script modifies your bashrc (either ```~/.bashrc``` or ```/etc/bash.bashrc```) and inserts an alias for cd to a bash function.  
 This bash function is executed when typing ```cd```. This bash function executes a python script, that will save all dirs you visited in 
@@ -39,4 +44,4 @@ A backup of your bashrc is stored at ```~/.cd-history-backup```.
 ## tip  
 install fuzzy finder and add this in your bashrc  
 ```alias c='cd $(cd-history --action=show --mode=terminal --results=1000 | fzf --tiebreak=index)'```  
-press c in terminal and navigate fast with search function  
+press c in terminal and navigate fast with fuzzy search function  
